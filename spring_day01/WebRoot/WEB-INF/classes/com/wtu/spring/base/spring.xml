@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<bean id="boyId" class="com.wtu.spring.base.Boy">
+		<property name="id" value="007"/>
+		<property name="name" value="狗娃"/>
+		<property name="salary" value="7000"/>
+	</bean>
+	<bean id="girlId" class="com.wtu.spring.base.Girl">
+		<property name="id" value="008"/>
+		<property name="name" value="翠花"/>
+		<property name="salary" value="6000"/>
+	</bean>
+</root>

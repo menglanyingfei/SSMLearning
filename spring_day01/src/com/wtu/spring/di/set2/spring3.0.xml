@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- 注册Addr对象和Phone对象 -->
+    <bean id="addr1" class="com.wtu.spring.di.set2.Addr">
+        <property name="name" value="北京"/>
+    </bean>
+    <bean id="addr2" class="com.wtu.spring.di.set2.Addr">
+        <property name="name" value="上海"/>
+    </bean>
+    <bean id="addr3" class="com.wtu.spring.di.set2.Addr">
+        <property name="name" value="广州"/>
+    </bean>
+
+    <bean id="phone1" class="com.wtu.spring.di.set2.Phone">
+        <property name="number" value="010"/>
+    </bean>
+    <bean id="phone2" class="com.wtu.spring.di.set2.Phone">
+        <property name="number" value="020"/>
+    </bean>
+    <bean id="phone3" class="com.wtu.spring.di.set2.Phone">
+        <property name="number" value="023"/>
+    </bean>
+
+    <!-- 注册Customer对象 -->
+    <bean id="customer" class="com.wtu.spring.di.set2.Customer">
+        <property name="address">
+            <list>
+                <ref bean="addr1"/>
+                <ref bean="addr2"/>
+                <ref bean="addr3"/>
+            </list>
+        </property>
+        <property name="phone">
+            <set>
+                <ref bean="phone1"/>
+                <ref bean="phone2"/>
+                <ref bean="phone3"/>
+            </set>
+        </property>
+        <property name="add_pho">
+            <map>
+                <entry key-ref="addr1">
+                    <ref bean="phone1"/>
+                </entry>
+                <entry key-ref="addr2">
+                    <ref bean="phone2"/>
+                </entry>
+                <entry key-ref="addr3">
+                    <ref bean="phone3"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

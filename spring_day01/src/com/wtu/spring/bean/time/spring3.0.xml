@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!--
+	lazy-init: default 启动容器是 单例, 创建对象; 多例, 不创建对象.
+        true: 懒, 不管是单例还是多例, 都不创建对象
+        false: 不懒, 启动容器是很勤快,
+        如果是单例就创建对象, 如果是多例, 也不创建对象
+        因为不知道需要多少个对象.
+	-->
+    <bean id="IUserDao" class="com.wtu.spring.bean.time.UserDaoImpl"
+        lazy-init="true"/>
+
+</beans>
+
+
+

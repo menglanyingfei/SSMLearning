@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- 注册一个Date对象 -->
+    <bean id="dateId" class="java.util.Date"/>
+
+    <bean id="customer" class="com.wtu.spring.di.set.Customer">
+        <property name="id" value="1"/>
+        <property name="name" value="李四"/>
+        <property name="sex" value="女"/>
+        <property name="age" value="18"/>
+
+        <property name="birthday" ref="dateId"/>
+
+        <property name="address">
+            <list>
+                <value>北京</value>
+                <value>上海</value>
+                <value>广州</value>
+            </list>
+        </property>
+        <property name="phone">
+            <set>
+                <value>010</value>
+                <value>020</value>
+                <value>023</value>
+            </set>
+        </property>
+        <property name="add_pho">
+            <map>
+                <entry key="北京">
+                    <value>020</value>
+                </entry>
+                <entry key="上海">
+                    <value>010</value>
+                </entry>
+                <entry key="广州">
+                    <value>030</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>
+
+
+

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!--
+	    通过中间类的非静态方法来创建对象:
+	    factory-bean: 引用中间类的对象
+	    factory-method: 中间类创建UserDaoImpl对象的方法
+	-->
+    <!--注册中间类对象 -->
+    <bean id="middleId" class="com.wtu.spring.bean.create3.Middle">
+    </bean>
+
+    <bean id="userDaoId" factory-bean="middleId"
+          factory-method="getInstance" />
+
+</beans>
+
+
+

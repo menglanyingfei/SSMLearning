@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 配置bean的生命周期方法
+	    init-method: 初始化的方法
+	    destroy-method: 销毁的方法
+	     -->
+    <bean id="iUserDao" class="com.wtu.spring.bean.life.UserDaoImpl"
+        init-method="myInit" destroy-method="myDestroy"/>
+
+
+</beans>
+
+
+

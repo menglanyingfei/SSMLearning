@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!--
+        bean的scope属性: 默认是singleton, 单例模式, 那么启动容器时, 会创建对象
+        scope: prototype, 多例模式, 那么启动容器时, 不创建对象
+        注意: 以后遇到Spring框架和Struts2框架的整合, 那么需要对Struct2的Action对象进行配置
+        一定要让scope="prototype"
+	      -->
+    <bean id="userDaoImpl" class="com.wtu.spring.bean.scope.UserDaoImpl"
+        scope="prototype"/>
+
+</beans>
+
+
+

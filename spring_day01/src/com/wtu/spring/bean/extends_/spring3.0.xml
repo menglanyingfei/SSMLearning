@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- bean的继承: 一个bean可以继承另一个bean的property属性
+	     parent: 父bean的id
+	     -->
+    <bean id="fatherId" class="com.wtu.spring.bean.extends_.Father">
+        <property name="id" value="001"/>
+        <property name="name" value="曹总"/>
+        <property name="salary" value="1000000"/>
+    </bean>
+
+    <bean id="sonId" class="com.wtu.spring.bean.extends_.Son" parent="fatherId">
+        <property name="id" value="002"/>
+        <property name="name" value="曹丕"/>
+    </bean>
+</beans>
+
+
+
