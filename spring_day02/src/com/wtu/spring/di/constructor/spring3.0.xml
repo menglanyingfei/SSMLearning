@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!--
+        通过constructor实现依赖注入
+        constructor-arg: 通过构造方法传过去的值
+        type: 用来限制传递的参数的类型
+    -->
+	<bean id="boyId" class="com.wtu.spring.di.constructor.Boy">
+        <!--
+        <constructor-arg type="java.lang.String">
+            <value>001</value>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String">
+            <value>小阳</value>
+        </constructor-arg>
+        <constructor-arg type="java.lang.Integer">
+            <value>16</value>
+        </constructor-arg>
+        <constructor-arg type="java.lang.Double">
+            <value>1000</value>
+        </constructor-arg>
+        -->
+
+        <!-- index: 参数在构造方法中的位置, 第一个参数从0开始 -->
+        <constructor-arg index="0">
+            <value>001</value>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <value>小阳</value>
+        </constructor-arg>
+        <constructor-arg index="2">
+            <value>16</value>
+        </constructor-arg>
+        <constructor-arg index="3">
+            <value>1000</value>
+        </constructor-arg>
+    </bean>
+
+</beans>
+
+
+
