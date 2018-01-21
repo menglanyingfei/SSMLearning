@@ -1,0 +1,81 @@
+SpringAOP环绕通知:
+环绕通知默认情况下代理对象只会调用一次服务代码,
+连目标对象的业务方法都不会调用
+(手动调用)
+环绕通知得在切面的方法中带上一个参数, 类型是ProceedingJoinPoint
+通过该对象proceed方法来调用目标对象的业务方法
+
+SpringAOP的注解形式:
+@Aspect: 一般使用在切面的类名上面, 作用是指定该类是一个切面
+@PointCut: 配置在目标对象的方法上面, 表示该方法是一个切入点
+@Around @After @Before @After-returning @After-throwing
+配置在切面的方法上面, 表示何种通知方式
+
+事务
+在JDBC中的事务
+
+ACID特性
+原子性 Atomicity
+一致性 Consistency
+隔离性 Isolation
+持久性 Durability
+
+数据库并发访问时引起的问题:
+脏读
+不可重复读
+虚读/幻读
+
+事务隔离级别
+
+通过Spring管理事务
+事务一般作用在Java Web的哪一层
+service
+
+Spring框架提供了一个事务管理类 DataSourceTransactionManager, 通过它来管理事务
+
+SpringDao模块:
+spring整合JDBC一起使用, 提供了一个JDBC模板, 那么通过这个模板操作数据库
+有点类似于QueryRunner
+Spring提供了一个类JdbcTemplate
+
+
+Spring中的注解:
+1. 实例化对象的注解
+@Component @repository @Controller @Service
+2. 依赖注入
+@Resource @Autowired
+3. aop的注解
+@After @Before @Around @After-returning @After-throwing(表示何种通知方式)
+@Aspect
+@Pointcut
+4. 事务的注解
+@Transactional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

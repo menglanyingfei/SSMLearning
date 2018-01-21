@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="
+       	   http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+
+           http://www.springframework.org/schema/context
+	       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+
+	       http://www.springframework.org/schema/aop
+	 	   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           ">
+
+    <!-- 配置UserDao -->
+    <bean id="userDao" class="com.wtu.spring.aop.around.UserDaoImpl">
+    </bean>
+
+    <!-- 配置切面 -->
+    <bean id="myLog" class="com.wtu.spring.aop.around.MyLog"/>
+
+    <!-- aop:config: 配置代理对象
+        proxy-target-class: 指底层的动态代理使用的是JDK, 还是CGLIB代理,
+        true表示CGLIB代理, CGLIB代理不是说没有接口, spring会根据目标对象自动生成一个接口
+        aop:pointcut: 配置切入点
+        execution: 确定切入点的方法
+        aop:aspect: 配置切面如何去切切入点
+        pointcut-ref: 切面中的方法去切哪个切入点
+    -->
+    <aop:config proxy-target-class="true">
+        <aop:pointcut expression="execution(* com.wtu.spring.aop.around.UserDaoImpl.a*(..))" id="xxx"/>
+        <aop:aspect ref="myLog">
+            <aop:around method="writeConsole" pointcut-ref="xxx"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
+
+
+
