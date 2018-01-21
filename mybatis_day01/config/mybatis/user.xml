@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="demo">
+    <!--
+        id:代表这条sql语句, 在SqlSession调用方法的时候, 需要该id作为参数进行传递, 在整个文件中不能重复
+        parameterType: 参数的类型
+        resultType：User
+        #{}：这是个占位符, 如果参数是简单类型(基本类型+String), 那么里面可以随便写.
+     -->
+    <select id="findUserById" parameterType="int" resultType="com.wtu.mybatis.User">
+        select * from `user` where id = #{id}
+    </select>
+</mapper>
