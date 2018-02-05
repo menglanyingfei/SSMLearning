@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="demo">
+    <select id="findAllUser" resultType="com.wtu.entity.User">
+        select * from `user`
+    </select>
+    <!--
+        id: 代表这条sql语句, 在SqlSession调用方法的时候, 需要该id作为参数进行传递, 在整个文件中不能重复
+        parameterType: 参数的类型
+        resultType：User
+        #{}：这是个占位符, 如果参数是简单类型(基本类型+String), 那么里面可以随便写.
+     -->
+    <select id="findUserById" parameterType="int" resultType="com.wtu.entity.User">
+        select * from `user` where id = #{id}
+    </select>
+
+    <!-- 根据姓名模糊查询
+    resultType: 查询结果中, 单条结果集映射的数据类型
+    parameterType: 输入参数类型
+    ${} : 不是占位符, 它是拼接字符串的一个连接符, 如果传入的参数是简单类型,
+     那么接收的变量只能是value, 它会将接收的参数原封不动, 不加任何修饰地拼接到SQL语句中 -->
+    <select id="findUserByName" parameterType="java.lang.String"
+            resultType="com.wtu.entity.User">
+        select * from `user` where username like '%${value}%'
+    </select>
+
+    <!-- 添加用户信息 增删改没有输出参数
+        parameterType: 因为要插入的参数是一个User对象, 所以类型就是User
+        #{}: 占位符中填写User的属性
+        这个取值跟EL表达式取值不一样, 这里就是成员变量的变量名或getXxx()的后面一部分中的其中一个
+
+        如何将主键的值会写到User对象中(主键自增情况下的回写)
+        <selectKey>: 用来将主键回写
+        keyProperty: 查询出来的主键对应着user对象的哪个属性
+        order: 查询主键语句在插入语句的前面还是后面执行
+        resultType: 查询出来的主键的类型
+
+        UUID生成的主键回写
+
+        -->
+    <insert id="insertUser" parameterType="com.wtu.entity.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select last_insert_id()
+        </selectKey>
+
+        <!-- 在插入语句之前, 先执行UUID() 函数, 生成一个主键, 然后主键设置到user对象中,
+         然后将user对象插入数据库, 所以order="BEFORE" -->
+        <!--<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">-->
+            <!--select uuid()-->
+        <!--</selectKey>-->
+
+        insert into `user` values(#{id}, #{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+
+    <!-- 根据id删除用户 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from user where id = #{abc}
+    </delete>
+
+    <!-- 修改用户信息 -->
+    <update id="updateUser" parameterType="com.wtu.entity.User">
+        update `user` set username = #{username}, birthday=#{birthday}, sex=#{sex}, address=#{address} where id=#{id}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,148 @@
+1. 创建工程
+2. 导入jar包
+3. 准备mybatis的全局配置文件
+SqlSessionFactoryBuilder -> SqlSessionFactory -> SqlSession
+SqlSessionFactoryBuilder: build(InputStream in) 获取SqlSessionFactory
+SqlSessionFactory: openSession()   获取SqlSession
+SqlSession:
+    selectOne(String id, Object param);
+    selectList(String id, Object param);
+    insert();
+    delete();
+    update();
+4. 准备mybatis的映射文件
+在映射文件中编写sql语句
+<insert></insert>
+<update></update>
+<delete></delete>
+<select id="" parameterType="" resultType=""></select>
+id: statement的id
+parameterType: 执行sql语句输入参数的类型
+resultType: 输出的参数类型
+
+=================================================================================
+添加用户信息
+CRUD
+
+一些问题:
+parameterType: 输入参数类型, 一定是类型的全名, 或者是别名(int)
+ResultType: 输出参数类型
+#{}: 占位符, 如果是简单类型, 那么里面可以随便写
+${}: 是连接符, 如果是简单类型, 那么里面只能是value
+
+如果parameterType是自定义的类类型, 那么#{}, ${}里面都要写该类型的属性
+
+Mybatis开发Dao层:
+SqlSession对象: 该对象是线程不安全的, 所以不能定义为成员变量, 只能定义局部变量.
+SqlSessionFactory: 该对象在项目中只需要一个, 那么该变量可以定义为成员变量
+
+
+上面的dao传统开发模式有两个不太好的地方:
+1. 我们需要在每个dao方法中去获取SqlSession对象, 并且调用SqlSession中
+的方法, 在每个方法中都是差不多的.
+2. 在每次调用SqlSession方法的时候, 传入的第一个参数都是硬编码, 写死了.
+不好!!!
+
+Mapper代理模式开发dao
+因为在每个dao的实现类的方法中, 存在大量的模板代码, 那么这些代码, 可以
+通过一个代理对象来调用. 但是这个代理对象根据dao的接口来生成,
+所以在Mapper代理开发中, 我只需要编写dao的接口, 不需要编写实现类.
+
+1. 准备映射文件
+如果采用的mapper代理开发模式, 那么映射文件的命名空间必须是
+Mapper接口的全路径;
+
+2. 编写接口中的方法
+三个特点:
+    1. Mapper接口中的方法名必须和映射文件中的sql语句的id一致
+    2. Mapper接口中的方法的返回值类型必须和resultType一致, 如果返回的
+    结果有多条记录, 那么返回值是List, 但是元素类型和resultType一致
+    3. Mapper接口中的方法参数必须和映射文件中parameterType一致
+
+Mybatis全局配置文件的一些配置信息
+properties（属性）
+settings（全局配置参数）
+typeAliases（类型别名）
+typeHandlers（类型处理器）
+objectFactory（对象工厂）
+plugins（插件）
+environments（环境集合属性对象）
+    environment（环境子属性对象）
+        transactionManager（事务管理）
+        dataSource（数据源）
+mappers（映射器）
+
+注意:上面几项配置, 必须按照顺序进行配置
+
+properties: 一般用来配置数据库的连接信息
+在properties标签体, 还可以通过property标签来设置属性, 但是此时的加载顺序是
+先加载的是property标签中的属性, 然后再加载resource指定的外部属性文件中的属性.
+
+settings(全局配置参数)
+该配置中可以配置全局参数, 比如二级缓存, 延迟加载和日志信息的配置
+配置信息参考: mybatis-settings.xlsx
+
+typeAliases(类型别名)
+mybatis默认支持的别名:
+string -> java.lang.String
+
+自定义别名:
+配置单个别名:
+批量配置别名:
+mybatis扫描某一个包, 对包下的所有类都创建别名
+
+类型处理器:
+一般不需要配置
+
+映射器(mappers)
+用来在全局配置文件中加载映射文件
+加载单个映射文件
+
+批量加载映射文件
+
+
+Mybatis中的输入输出映射
+输入映射 -> 输入的参数类型
+
+1. 简单类型(略)
+2. 简单pojo类型(类类型)(略)
+3. 自定义包装类型:
+从前面的mapper接口的方法中可以看出来, 每个方法只能够传递一个参数
+确实只能传一个参数. 但是有些时候, 我们在关联查询查询的时候, 可能
+查询条件有用户的信息, 还有商品的信息, 甚至还有订单的信息. 那么这个时候,
+我们只能讲所有的查询提交封装到一个对象中, 然后使用这个对象作为输入参数.
+
+查询: 根据用户的姓名和性别查询用户的信息
+
+    步骤:
+    1. 定义用户扩展类
+    2. 定义一个自定义的包装类, 封装所有的查询条件
+    3. 定义接口中的方法
+    4. 编写映射文件
+    5. 单元测试
+
+4. 输入映射为HashMap类型
+查询: 根据用户的姓名和性别查询用户的信息
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

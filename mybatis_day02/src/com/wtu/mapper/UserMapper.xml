@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+如果采用的mapper代理开发模式, 那么映射文件的命名空间必须是
+Mapper接口的全路径 -->
+<mapper namespace="com.wtu.mapper.UserMapper">
+    <!-- 根据姓名进行模糊查询  -->
+    <select id="findUserByName" parameterType="java.lang.String"
+            resultType="user">
+        select * from `user` where username like '%${value}%'
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        <selectKey keyProperty="id" order="AFTER" resultType="integer">
+            select last_insert_id()
+        </selectKey>
+        insert into `user` values(#{id}, #{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+
+    <!-- 根据用户名和性别查询用户的信息, 使用包装类类型作为输入参数
+        取值的时候, 首先通过包装类中 属性名.属性名.属性名 -->
+    <select id="findUserByNameAndSex" parameterType="QueryVo"
+            resultType="UserCustomer">
+        select * from `user` where sex=#{userCustomer.sex} and username like '%${userCustomer.username}%'
+    </select>
+
+    <!-- 根据用户名和性别查询用户的信息, 使用HashMap作为输入参数
+        占位符中的参数是HashMap中key -->
+    <select id="findUserByHashMap" parameterType="java.util.HashMap"
+            resultType="UserCustomer">
+        select * from `user` where sex=#{sex} and username like '%${username1}%'
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
