@@ -8,4 +8,6 @@ spring_day02  Spring Aop<br>
 spring_day03  Spring DAO<br>
 mybatis_day01 JDBC & mybatis使用入门<br>
 mybatis_day02 Mybatis实现基本CRUD和代理开发模式<br>
+mybatis_day03 Mybatis中的输入输出映射<br>
+
 
