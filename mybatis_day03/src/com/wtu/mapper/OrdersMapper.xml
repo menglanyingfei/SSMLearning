@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+如果采用的mapper代理开发模式, 那么映射文件的命名空间必须是
+Mapper接口的全路径
+-->
+<mapper namespace="com.wtu.mapper.OrdersMapper">
+    <!-- 查询用户信息并且关联查询用户购买的商品的信息 -->
+    <resultMap id="findUserAndItems" type="user">
+        <id column="user_id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="address" property="address"/>
+
+        <!-- 映射订单的信息 -->
+        <collection property="ordersList" ofType="orders">
+            <id column="id" property="id"/>
+            <result column="user_id" property="user_id"/>
+            <result column="number" property="number"/>
+            <result column="createtime" property="createtime"/>
+            <result column="note" property="note"/>
+            <!-- 映射订单明细的信息 -->
+            <collection property="odlist" ofType="orderdetail">
+                <id column="orderdetail_id" property="id"/>
+                <result column="items_num" property="items_num"/>
+                <!-- 映射商品的信息 -->
+                <association property="items" javaType="items">
+                    <id column="商品id" property="id"/>
+                    <result column="name" property="name"/>
+                    <result column="price" property="price"/>
+                    <result column="detail" property="detail"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!-- 查询订单信息并且关联用户信息和对应的订单明细的信息
+        extends: 一个resultMap片段去继承另外一个resultMap片段公共的部分 -->
+    <resultMap id="findOrdersAndUserAndOrderdetail" type="orders"
+               extends="findOrdersAndUser">
+        <!-- 映射订单中订单明细的信息, 映射一对多的关系
+         property: 映射订单类中的哪个属性
+         ofType: 集合中元素的类型
+         <id/>: 结果集中唯一标识一行记录的字段
+         <result/>: 普通字段 -->
+        <collection property="odlist" ofType="orderdetail">
+            <id column="orderdetail_id" property="id"/>
+            <result column="items_num" property="items_num"/>
+            <result column="orders_id" property="orders_id"/>
+        </collection>
+    </resultMap>
+
+    <!--定义查询订单和用户的ResultMap
+        type: 单条查询结果集映射的类型
+         <id/>: 结果集中唯一标识一行记录的字段
+         column: 字段名 property: 该字段名映射的Orders中的属性名
+         <result/>: 普通字段 -->
+    <resultMap id="findOrdersAndUser" type="orders">
+        <id column="id" property="id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="number" property="number"/>
+        <result column="createtime" property="createtime"/>
+        <result column="note" property="note"/>
+        <!-- 映射用户相关的信息
+        <association/>: 将查询结果映射到一个pojo中的另一个pojo中
+        映射到Orders中的user属性
+        property: 查询结果映射到Orders类哪个属性中
+        javaType: 该pojo的类型 -->
+        <association property="user" javaType="user">
+            <id column="user_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="sex" property="sex"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
+
+    <!--查询订单信息, 并且查询该订单对应的用户部分信息 -->
+    <select id="findOrdersAndUser" resultType="ordersCustomer">
+        select orders.*, `user`.username, `user`.sex , `user`.address
+        from orders, `user`
+        where orders.`user_id` = user.`id`
+    </select>
+
+    <!--查询订单信息, 并且查询该订单对应的用户部分信息, 采用ResultMap作为输出参数 -->
+    <select id="findOrdersAndUserByResultMap" resultMap="findOrdersAndUser">
+        select orders.*, `user`.username, `user`.sex , `user`.address
+        from orders, `user`
+        where orders.`user_id` = user.`id`
+    </select>
+
+    <!-- 查询订单信息并且关联用户信息和对应的订单明细的信息 -->
+    <select id="findOrdersAndUserAndOrderdetail" resultMap="findOrdersAndUserAndOrderdetail">
+        select orders.*, `user`.username, `user`.sex , `user`.address
+        ,orderdetail.id orderdetail_id, orderdetail.items_num, orderdetail.orders_id
+        from orders, `user`, `orderdetail`
+        where orders.`user_id` = user.`id` AND
+        orders.`id` = orderdetail.orders_id
+    </select>
+
+    <!-- 查询用户信息并且关联查询用户购买的商品的信息 -->
+    <select id="findUserToItems" resultMap="findUserAndItems">
+        select orders.*,
+        `user`.username,
+        `user`.sex,
+        `user`.address,
+        orderdetail.id orderdetail_id,
+        orderdetail.items_num,
+        items.`name`,
+        items.price,
+        items.detail,
+        items.id 商品id
+        from `user`, items, orders, orderdetail
+        where `user`.id = orders.user_id
+        and orders.id = orderdetail.orders_id
+        and orderdetail.items_id = items.id
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

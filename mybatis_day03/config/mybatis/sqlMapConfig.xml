@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- 加载数据库配置信息的属性文件, 跟spring整合以后就没了 -->
+    <properties resource="dbConfig.properties">
+        <!--<property name="user" value="root1"/>-->
+    </properties>
+
+    <!-- 在控制台输出日志信息 -->
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <!-- 配置自定义类型别名
+     type: 本来的类型
+     alias: 别名
+     <package name=""/>: 批量扫描某一个包, 如果是批量配置别名, 那么
+     别名就是类名, 并且首字母大写和小写都可以
+     -->
+    <typeAliases>
+        <!-- 配置单个别名 -->
+        <!--<typeAlias type="com.wtu.entity.User" alias="user"/>-->
+        <package name="com.wtu.pojo"/>
+    </typeAliases>
+
+
+    <!-- environments 里面的内容在mybatis和spring整合以后, 就全部没了 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driverClass}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!-- 将映射文件加载到全局配置文件 -->
+        <!--<mapper resource="mybatis/user.xml"/>-->
+
+        <!-- 将UserMapper.xml加入到全局配置文件 -->
+        <!--<mapper resource="mapper/UserMapper.xml"/>-->
+
+        <!-- 通过mapper接口来加载映射文件
+            1. 映射文件的文件名必须和接口名相同
+            2. 映射文件必须和Mapper接口处于同一个目录下
+            3. 这种方式只适合Mapper代理开发模式 -->
+        <!--<mapper class="com.wtu.mapper.UserMapper"/>-->
+
+        <!-- 批量加载映射文件, 自动去扫描某一个包, 将该包下的所有映射文件加载 -->
+        <package name="com.wtu.mapper"/>
+    </mappers>
+</configuration>
