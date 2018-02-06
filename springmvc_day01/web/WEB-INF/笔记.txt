@@ -1,0 +1,79 @@
+Springmvc:
+SpringMVC作用在三层框架的表现层:
+其实就相当于mvc设计模式中的控制器, 它并不是一个单独的框架, 它
+只是Spring框架中的一个模块, 它也需要依赖Spring的核心jar包
+持久层: Mybatis
+业务层: spring
+表现层: SpringMVC
+
+MVC: 由Model, View, Controller三部分组成
+M: model(模型) 是一个广义上的概念, 一般用来处理业务的java类都可以
+称之为模型
+C: controller(主要用来接收客户端的请求, 不能处理业务,
+控制器调用模型处理业务, 然后得到模型返回的结果)
+V: view(视图)控制器得到模型返回的结果以后, 需要通过视图
+向用户展示
+
+SpringMVC: 核心组件就是一个Servlet, 叫做前端控制器
+1. 前端控制器(DispatcherServlet): 就是一个Servlet, 该组件跟其它所有的组件都有
+交互, 课降低其它组件的耦合关系. 不需要我们编写
+2. 处理器映射器(HandlerMaping): 会规范handler路径, 前端控制器
+通过请求处理器映射器得到Handler
+3. 处理器适配器(HandlerAdapter):
+用来执行我们编写的Handler程序, 所有我们在编写Handler的时候需要
+遵循HandlerAdapter的规范
+4. Handler: 由我们自己编写, 用来处理业务
+5. 视图解析器(ViewResolver):
+将逻辑视图转化成一个物理视图
+6. 视图: jsp(由我们自己编写)
+
+SpringMVC入门小程序
+查询商品信息, 并且将信息展示到页面
+准备环境, 准备jar包
+配置前端控制器  DispatcherServlet
+配置处理器适配器   SimpleControllerHandlerAdapter
+
+编写Handler
+因为Handler需要适配器来执行, 所以按照适配器的要求编写Handler, 通过
+查看源代码发现我们编写Handler需要实现一个Controller接口.
+
+配置处理器映射器
+
+配置Handler的访问路径
+
+配置视图解析器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
