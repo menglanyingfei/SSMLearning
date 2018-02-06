@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wtu.ssm.mapper.ItemsMapper">
+    <!-- 动态查询 -->
+    <!-- 定义SQL片段 -->
+    <sql id="query_items">
+        <if test="items!=null">
+            <if test="items.name!=null and items.name!=''">
+                and name like '%${items.name}%'
+            </if>
+        </if>
+    </sql>
+
+    <select id="findItemsByName" parameterType="queryVo" resultType="items">
+        select * from items
+        <where>
+            <include refid="query_items"/>
+        </where>
+    </select>
+    <!--根据商品的id查询-->
+    <select id="findItemsById" parameterType="int" resultType="items">
+        select * from items where id = #{id}
+    </select>
+
+    <!-- 修改Items的信息 -->
+    <update id="updateItems" parameterType="items">
+        update items set name=#{name}, price=#{price}, createtime=#{createtime},
+        pic=#{pic}, detail=#{detail} where id=#{id}
+    </update>
+</mapper>
+

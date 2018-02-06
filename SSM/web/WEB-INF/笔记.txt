@@ -1,0 +1,495 @@
+修改商品信息:
+
+1. 根据ID查询商品信息, 将商品的信息显示修改页面上
+2. 修改商品信息以后, 点击提交按钮提交数据到数据库里
+
+但是上面的代码, 在获取参数方法非常麻烦,
+我们可以通过springMVC提供的参数绑定来解决这个问题
+SpringMVC数据绑定
+注解:
+@RequestMapping("/items")
+作用在类和方法上
+1. 设置方法的访问路径
+2. 对访问路径进行分类管理
+那么此时访问该类下所有的方法的时候, 都需要在URL前面加上/items
+3. 可以限制请求方式
+method: 数组, 可以定义多种请求方法
+
+Controller方法的返回值:
+1. 返回ModelAndView
+
+2. 返回String
+a) 返回一个逻辑视图
+相当于调用modelAndView.setViewName("逻辑视图名")
+b) 返回"redirect:路径" (重定向, 不需要写项目名)
+c) 返回"forward:路径" (转发)
+
+3. 返回void
+这种情况使用和servlet的使用差不多, 由于没有返回值,
+需要request或者response进行转发或者重定向
+此时转发或者重定向时不会经过视图解析器的处理
+
+参数绑定:
+在SpringMVC中有几个参数是默认已经绑定好了的.
+HttpServletRequest
+HttpServletResponse
+HttpSession
+Model
+
+1. 简单类型的绑定
+默认情况下, 请求中的参数名必须要和Controller方法的形参的参数名一致
+上面的注解表示请求中的参数名要和value的值保持一样, 才能绑定成功
+required:表示该参数是否是必须的
+defaultValue：给这个参数一个默认值
+
+2. pojo类型的绑定
+a) 简单类型的pojo
+要求请求中的参数名(JSP中name属性值)和pojo的属性名一致才能绑定
+b) 包装类型
+如果绑定的类型是包装的pojo类型, 那么请求参数名必须是
+包装的pojo中的属性名.属性名
+直到最后的类型是简单类型
+此时, 解决中文乱码的过滤器
+在web.xml中配置
+
+3. 自定义参数的绑定
+需要我们自定义一个参数类型转换器, 去实现
+Spring提供了的一个接口Converter<String, Date>
+
+数组类型的参数绑定
+批量删除商品:
+根据商品的id来删除, 多个商品的id绑定到数组中
+只需要请求参数名和Controller方法中的形参数组名一致
+
+集合类型的参数绑定
+批量修改商品信息
+1. 批量查询商品然后将所有的商品信息显示在一个批量修改的页面
+批量修改商品的页面可以直接采用ItemsList.jsp
+2. 提交批量修改商品
+
+此时在QueryVo中封装了itemsList集合
+
+
+SpringMVC的拦截器实现权限的验证
+拦截器拦截请求, 然后再判断相关信息,
+是否请求可以继续下去.
+
+Spring MVC如何实现拦截器的功能:
+只需要自定义一个类, 去实现SpringMVC提供的
+一个接口, HandlerInterceptor
+然后只要在Springmvc.xml文件中配置一个拦截器,
+配置具体拦截的请求url
+
+拦截器链:
+interceptor1 -> interceptor2 -> interceptor3 ...
+
+1. 如果两个拦截器都放行:
+拦截的方法是根据配置文件的顺序来执行, 其它方法相反
+
+2. 如果Interceptor1放行, Interceptor2不放行
+要执行Controller中的方法, 一定要所有的拦截器都放行才能执行
+
+3. 如果两个Interceptor都返回false
+preHandler -- interceptor1
+
+实现用户登录权限的校验
+1. 拦截器拦截所有的请求
+2. 判断session中是否存在用户信息, 如果存在则放行
+如果不存在, 继续判断请求路径是否是登录页面
+3. 如果请求路径是登录页面, 那么就放行, 如果不是, 则重定向
+到登录界面, 进行登录
+
+(下午)============================================================
+SpringMVC参数校验
+使用Hibernate-validator对
+controller绑定的POJO形参进行校验
+1. 导入校验的所需的jar包
+2. 在xml文件中配置参数校验器
+3. 引入校验器
+4. 在pojo属性中添加参数的校验
+5. 在Controller增加注解
+
+如果添加了参数校验, 那么必须在pojo参数中加上@Vaildated注解, 然后
+再在参数后面加上BindingResult参数, 用来获取错误的信息
+
+数据的回写
+比如在商品的修改页面, 提交以后, 如果出现错误, 那么
+重新回到商品修改页面的时候, 商品的信息还在, 这就是
+数据的回写.
+默认情况下, 如果出现异常, 那么会自动将pojo的类型, 并且
+首字母小写作为request域的键, 然后将pojo的对象作为值,
+然后传递到页面.
+如果在页面接收值的时候, 使用的变量名不是pojo的类型名,
+并且首字母小写, 那么在POJO参数的前面加上@ModelAttribute("items1")
+明确指定request域中的键为items1, 那么这个时候就可以在页面上
+通过items1来获取值
+
+如果是简单类型的参数回写, 那么只能通过model.addAttribute("key", value);
+
+
+SpringMVC的全局异常处理:
+1. 自定义一个异常类
+2. 定义一个类实现HandlerExceptionResolver接口
+3. 在xml文件中配置异常解析器
+关于项目中, 异常处理注意的问题:
+1. 如果使用Spring Mapper的异常抛给service层, service的异常抛给
+controller层
+2. 开发阶段中不需要将异常处理掉
+3. 在Controller也是将异常给抛出来, 那么会由处理器适配器捕获异常, 并
+调用我们自己编写的异常解析器来进行异常的处理
+
+同时, 在mapper中应该将方法都声明为抛出异常
+public interface ItemsMapper {
+    List<Items> findItemsByName(QueryVo queryVo) throws Exception;
+    // ...
+}
+
+SpringMVC文件上传:
+1. 表单中的组件type="file"
+<input type="file"/>
+
+2. 如果要上传文件, 那么在form表单中添加如下属性:
+enctype="multipart/form-data"
+
+3. 需要在xml文件中配置一个文件解析器
+
+4. 在Controller方法中进行图片参数的绑定
+
+5. 在tomcat中绑定一个虚拟路径, 真实路径是本地的磁盘
+在tomcat的server.xml文件中的<Host>标签下配置
+然后只需要将图片上传到E盘下的temp目录下即可
+<Context docBase="E:\temp" path="/pic"/>
+
+6. 具体的上传代码
+
+7. 文件上传需要导入相应的jar包
+
+
+SpringMVC和ajax的交互, 采用json数据格式
+客户端发起ajax请求, 请求参数的形式有哪些?
+1. json对象格式
+2. json串格式
+3. key=value格式(推荐使用这一种)
+
+Controller向客户端响应的数据格式:
+1. json对象
+2. 文本
+
+1. 客户端发起ajax请求, 请求参数为json对象, 那么Controller方法中形参如何绑定?
+此时的参数绑定和提交的key=value格式是一样的绑定方式
+
+2. 客户端发起ajax请求, 但是参数是json串格式, 那么
+Controller的方法中形参该如何绑定?
+给处理器适配器配置一个json转换器
+
+如果配置的是<mvc:annotation-driven/>, 来代替处理器适配器和处理器映射器
+, 那么就不需要配置json转换器, 它会去自动加载
+
+两个注解:
+@RequestBody
+如果ajax请求Controller的时候传递的是json串, 那么
+在Controller方法中的pojo形参前面要加上该注解, 会将json中的属性值
+自动注入到pojo中的属性中
+
+@ResponseBody
+将Controller方法返回的pojo对象转换成json对象响应给
+客户端
+注意: springMVC跟ajax交互的时候, controller方法的返回值最好是
+POJO, Map, List
+
+SpringMVC要支持JSON, 需要导入相应的jar包
+jackson-core-asl-1.9.11.jar
+jackson-mapper-asl-1.9.11.jar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

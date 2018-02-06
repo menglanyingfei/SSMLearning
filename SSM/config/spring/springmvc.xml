@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+  
+ 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+ 		<!--前缀 -->
+ 		<property name="prefix" value="/jsp"/>
+ 		<!-- 后缀 -->
+		<property name="suffix" value=".jsp"/>
+ 	</bean>
+ 	
+ 	<!-- 配置注解形式的适配器和映射器
+ 	    conversion-service: 配置自定义参数绑定器
+        validator: 引入一个校验器
+ 	-->
+ 	<mvc:annotation-driven conversion-service="conversionService"
+        validator="validator"/>
+
+    <!-- 注册一个参数绑定器 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!-- 转换器 -->
+        <property name="converters">
+            <list>
+                <bean class="com.wtu.ssm.utils.StringToDate"/>
+            </list>
+        </property>
+    </bean>
+
+ 	<!-- 批量扫描Controller包下的所有类, 使用IOC容器创建对象 -->
+ 	<context:component-scan base-package="com.wtu.ssm.controller"/>
+
+    <!-- 配置拦截器 -->
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash; path: 指定将要拦截的路径-->
+            <!--/**: 表示拦截所有请求-->
+            <!--class: 自定义拦截器的全限定名 &ndash;&gt;-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<bean class="com.wtu.ssm.interceptor.InterceptorDemo1"/>-->
+        <!--</mvc:interceptor>-->
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash; path: 指定将要拦截的路径-->
+            <!--/**: 表示拦截所有请求-->
+            <!--class: 自定义拦截器的全限定名 &ndash;&gt;-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<bean class="com.wtu.ssm.interceptor.InterceptorDemo2"/>-->
+        <!--</mvc:interceptor>-->
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash; path: 指定将要拦截的路径-->
+            <!--/**: 表示拦截所有请求-->
+            <!--class: 自定义拦截器的全限定名 &ndash;&gt;-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<bean class="com.wtu.ssm.interceptor.LoginInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+
+    <!-- 配置参数校验器 -->
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <!-- 校验器-->
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+
+        <!-- 指定校验使用的资源文件，如果不指定则默认使用classpath下的ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource" />
+    </bean>
+
+    <!-- 校验错误信息配置文件 -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <!-- 资源文件名-->
+        <property name="basenames">
+            <list>
+                <value>classpath:CustomValidationMessages</value>
+            </list>
+        </property>
+        <!-- 资源文件编码格式 -->
+        <property name="fileEncodings" value="utf-8" />
+        <!-- 对资源文件内容缓存时间，单位秒 -->
+        <property name="cacheSeconds" value="120" />
+    </bean>
+
+    <!-- 配置异常解析器 -->
+    <!--<bean class="com.wtu.ssm.exception.MyExceptionResolver"/>-->
+
+    <!-- 文件上传 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为5MB -->
+        <property name="maxUploadSize">
+            <value>5242880</value>
+        </property>
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
