@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+如果采用的mapper代理开发模式, 那么映射文件的命名空间必须是
+Mapper接口的全路径
+-->
+<mapper namespace="com.wtu.mapper.OrdersMapper">
+    <!-- 开启二级缓存 -->
+    <cache/>
+
+    <!-- 根据id查询用户信息
+    如果想要某一条查询语句禁用二级缓存, 那么需要加上
+        useCache="false" -->
+    <select id="findUserById" parameterType="int" resultType="user" useCache="true">
+        select * from user where id = #{value}
+    </select>
+
+    <!-- 定义延迟加载用户信息的resultMap -->
+    <resultMap id="lazyLoadingUser" type="orders">
+        <id column="id" property="id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="number" property="number"/>
+        <result column="createtime" property="createtime"/>
+        <result column="note" property="note"/>
+        <!-- 将用户的信息映射到Orders类中user属性
+            select: 表示延迟加载的时候, 需要去查询哪一条SQL
+            加入该SQL在其它的映射文件中的时候, 那么需要在前面加上namespace
+            column: 在延迟加载查询的时候, 需要传递的字段的值 -->
+        <association property="user" javaType="user" select="findUserById"
+            column="user_id">
+        </association>
+    </resultMap>
+
+    <!-- 查询订单并且关联查询用户信息, 延迟加载用户信息 -->
+    <select id="findOrdersLazyLoadingUser" resultMap="lazyLoadingUser">
+        select * from orders
+    </select>
+
+    <!-- 修改用户信息 -->
+    <update id="updateUser" parameterType="user" flushCache="true">
+        update user set username = #{username} where id = #{id}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

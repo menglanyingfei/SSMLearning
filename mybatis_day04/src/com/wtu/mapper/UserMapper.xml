@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+如果采用的mapper代理开发模式, 那么映射文件的命名空间必须是
+Mapper接口的全路径
+-->
+<mapper namespace="com.wtu.mapper.UserMapper">
+
+    <!-- 创建ResultMap片段
+        type: 输出的类型
+        id: 唯一表示该ResultMap
+        -->
+    <resultMap id="findUserResultMap" type="user">
+        <!-- id: 查询结果集中唯一标示该条记录的字段名
+         column: 字段名 property: pojo中的属性名
+         result: 普通字段名 -->
+        <id column="id_" property="id"/>
+        <result column="姓名" property="username"/>
+        <result column="性别" property="sex"/>
+        <result column="生日" property="birthday"/>
+        <result column="地址" property="address"/>
+    </resultMap>
+
+    <!-- 定义SQL片段 id: 唯一标识 -->
+    <sql id="queryUser">
+        <if test="userCustomer != null">
+            <if test="userCustomer.username != null and userCustomer.username != ''">
+                and username like '%${userCustomer.username}%'
+            </if>
+            <if test="userCustomer.sex != null and userCustomer.sex != ''">
+                and sex = #{userCustomer.sex}
+            </if>
+        </if>
+    </sql>
+
+    <!-- 根据姓名和性别统计人数, 采用QueryVo作为输入参数 -->
+    <select id="findUserCount" parameterType="queryVo" resultType="int">
+        select count(*) from `user`
+        where username like '%${userCustomer.username}%'
+        and sex = #{userCustomer.sex}
+    </select>
+
+    <!-- 根据id查询用户, 采用HashMap作为输出映射 -->
+    <select id="findUserById" parameterType="int" resultType="java.util.HashMap">
+        select * from `user` where id = #{value}
+    </select>
+
+    <!-- 根据id查询用户, 采用User作为输出映射 -->
+    <select id="findUserById2" parameterType="int" resultType="user">
+        select id, sex, username, birthday, address from `user` where id = #{value}
+    </select>
+
+    <!-- 根据id查询用户, 采用ResultMap作为输出 -->
+    <select id="findUserByResultMap" parameterType="int" resultMap="findUserResultMap">
+        select id id_, sex 性别, username 姓名, birthday 生日, address 地址 from `user` where id = #{value}
+    </select>
+
+    <!-- 根据性别和姓名查询用户信息, 如果没有输入查询条件, 则查询所有 -->
+    <select id="findUserByUserNameAndSex" parameterType="queryVo"
+            resultType="userCustomer">
+        select * from `user`
+        <!-- where标签会自动去掉拼接段里面的第一个and -->
+        <where>
+            <!-- 引入一个SQL片段, refid: 引入那个SQL片段的id -->
+            <include refid="queryUser"/>
+        </where>
+    </select>
+
+    <!-- 查询用户名中带小字, 性别为1, 用户id为28, 30的用户 -->
+    <select id="findUserByUserNameAndSex2" parameterType="queryVo" resultType="userCustomer">
+        select * from `user`
+        <!-- where标签会自动去掉拼接段里面的第一个and -->
+        <where>
+            <include refid="queryUser"/>
+            <!-- and id IN(28, 30)
+                collection: 遍历的集合属性名
+                open: 开始拼接的字符串
+                close: 结束时的字符串
+                separator: 集合中元素之间的分隔符
+                item: 遍历出来的每一个元素对象
+                -->
+            <if test="ids != null">
+                <foreach collection="ids" open="and id IN(" close=")" separator="," item="id1">
+                    #{id1}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

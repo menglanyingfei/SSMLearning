@@ -1,0 +1,73 @@
+Mybatis的延迟加载
+比如在查询订单信息, 并且关联查询该订单对应的用户信息.
+注意两个问题:
+1. 要是用延迟加载必须使用resultMap作为输出映射
+2. Mybatis默认没有延迟加载, 所以需要在全局配置文件中加入<settings>配置
+
+在sqlMapConfig.xml加上如下配置:
+<!-- 开启延迟加载 -->
+<setting name="lazyLoadingEnabled" value="true"/>
+<!-- 将积极加载取消 -->
+<setting name="aggressiveLazyLoading" value="false"/>
+
+
+Mybatis的缓存:
+缓冲 IO流的Buffer
+mybatis:
+Mybatis提供了一级缓存和二级缓存
+
+一级缓存:
+一级缓存是SqlSession级别的缓存
+使用SqlSession第一次去查询数据的时候,
+会将查询到的数据保存到SqlSession中,
+底层依赖着一个Map对象, 当第二次使用同一个SqlSession对象去
+查询相同的数据的时候, 不会再向数据库发送SQL语句, 直接从缓存中获取数据
+但是如果在这两次查询之间, 有执行增删改的操作, 那么session还需要
+commit()操作, 那么这个时候会清除掉SqlSession中的缓存, 这是为了
+保存缓存中的数据始终和数据库的数据保存一致.
+一级缓存默认在Mybatis已经开启.
+
+
+二级缓存:
+当第一个SqlSession查询数据库的时候, 会将查询出来的数据放到二级缓存中,
+然后另外的SqlSession再次查询同样的数据的时候, 会先查询二级缓存中的数据.
+同样, 在两次查询之间, 如果有执行commit()操作, 那么也会清除二级缓存中的数据.
+注意: 二级缓存默认是没有开启的, 所以必须配置<settings>中的参数, 然后在映射文件中添加
+<cache/>表示开启二级缓存. 因为二级缓存的存储介质不一定是内存, 可能是存储在
+硬盘上面, 那么需要我们的pojo去实现序列化接口.
+
+如果想要在执行commit()操作的时候, 不去刷新二级缓存, 需要加入
+<!-- 修改用户信息 -->
+<update id="updateUser" parameterType="user" flushCache="false">
+    update user set username = #{username} where id = #{id}
+</update>
+
+但是, 一般不会这样, 因为这样会导致二级缓存中的数据和数据库中的数据不一致.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
