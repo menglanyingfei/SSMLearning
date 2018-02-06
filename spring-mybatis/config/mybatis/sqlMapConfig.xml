@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration> 
+    <!-- 在控制台输出日志信息 -->
+    <!--<settings>-->
+        <!--<setting name="logImpl" value="LOG4J"/>-->
+    <!--</settings>-->
+
+    <typeAliases>
+        <package name="com.wtu.ssm.entity"/>
+    </typeAliases>
+
+    <!-- 加载映射文件  -->
+  <!--<mappers>-->
+      <!--&lt;!&ndash; 原始dao开发的加载 &ndash;&gt;-->
+      <!--<mapper resource="mybatis/user.xml"/>-->
+  <!--</mappers>-->
+</configuration>

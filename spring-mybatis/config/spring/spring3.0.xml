@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+
+    <!--加载属性文件, 从类路径下直接加载 -->
+    <context:property-placeholder location="classpath:dbConfig.properties"/>
+
+    <!-- 注册c3p0数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${driverClass}"/>
+        <property name="jdbcUrl" value="${url}"/>
+        <property name="user" value="${user}"/>
+        <property name="password" value="${pass}"/>
+    </bean>
+
+    <!-- 注册SqlSessionFactory对象, 由于SqlSessionFactory是个接口, 所以
+        配置它的实现类
+        然后mybatis和spring整合包正好提供了一个实现类 SqlSessionFactoryBean -->
+    <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml"/>
+    </bean>
+
+    <!-- 注册UserDaoImpl对象 -->
+    <bean id="userDaoImpl" class="com.wtu.ssm.dao.UserDaoImpl">
+        <property name="sqlSessionFactory" ref="factory"/>
+    </bean>
+
+    <!-- mapper代理开发时, 由于没有实现类
+        MapperFactoryBean:
+        我们通过该类来产生Mapper接口的代理对象 -->
+    <!--<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--&lt;!&ndash; 我们自己写的Mapper接口的路径 &ndash;&gt;-->
+        <!--<property name="mapperInterface" value="com.wtu.ssm.mapper.UserMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="factory"/>-->
+    <!--</bean>-->
+
+    <!-- 通过MapperScannerConfigurer来批量扫描某一个包
+        生成的每一个代理对象的id为接口名, 并且首字母小写 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wtu.ssm.mapper" />
+        <!-- 这个方法过时了, 而是需要sqlSessionFactoryBeanName
+            通过工厂的名字来加载 -->
+        <!--<property name="sqlSessionFactory" ref="factory"/>-->
+
+        <property name="sqlSessionFactoryBeanName" value="factory"/>
+    </bean>
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

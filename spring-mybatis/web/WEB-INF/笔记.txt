@@ -1,0 +1,26 @@
+Spring整合mybatis
+准备环境:
+spring的jar包
+mybatis的jar包
+mybatis和spring的整合jar包
+Spring的配置文件
+Mybatis的全局配置文件
+Mybatis的映射文件
+
+传统方式DAO开发的整合(需要编写接口, 也需要编写实现类)
+
+
+Mapper代理模式的整合
+1. 通过MapperFactoryBean配置单个Mapper接口的代理对象
+由于Mapper没有实现类, 只有接口, 然而在Spring中注册对象需要实现类,
+所以提供了MapperFactoryBean这个类, 可以通过这个类来注册代理对象.
+该类中必须配置两个属性:
+mapperInterface: 配置自己编写的mapper接口的路径
+sqlSessionFactory: 需要配置一个session工厂, 引入一个工厂对象
+然后在SpringIoc容器中就可以通过id来获取mapper接口的代理对象
+
+2. 通过MapperScannerConfigurer来批量扫描某一个包, 生成该包下的所有的mapper接口的代理对象
+注意:如果采用的使Mapper代理开发方式进行整合的话,
+就不需要再mybatis的全局配置文件中再去加载映射文件
+
+
